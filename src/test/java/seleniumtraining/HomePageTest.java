@@ -1,66 +1,50 @@
 package seleniumtraining;
 
-import static org.junit.jupiter.api.Assertions.*;
-
-import org.junit.Assert;
-import org.junit.Before;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.openqa.selenium.By;
 import org.openqa.selenium.support.PageFactory;
 
-class HomePageTest extends TestBase {
+
+public class HomePageTest extends TestBase {
 
 	  private HomePage homepage;
 	  
 
-	  @Before
+	  @BeforeEach
 	  public void initPageObjects() {
 		baseUrl = "https://ksiegarniainternetowa.de/";
 	    this.homepage = PageFactory.initElements(driver, HomePage.class);
-	  }
-
-	  @Test
-	  public void testHomePageHasAHeader() {
-	    driver.get(baseUrl);
-	    Assert.assertFalse("".equals(homepage.header.getText()));
 	  }
 	  
 	  @Test
 	  public void testSetLanguageToPolish() {
 		  driver.get(baseUrl);
 		  this.homepage.setLanguage("Polish");
-		  Assert.assertTrue("Set language doesnt match language on Page", this.languageMatch()=="Polish");
+		  Assertions.assertTrue(this.homepage.getHeader().contains("Tania wysyłka"), "Set language doesnt match language on Page, return sample: "+this.homepage.getHeader());
 	  }
 	  
-	  private String languageMatch() {
-		  switch(this.homepage.header.getText()) {
-		  case "Tania wysyłka do Niemiec od 1€ do 4€!":
-			  return "Polish";
-		  case "Günstige Versandkosten in Deutschland ab 1€ bis 4€!":
-			  return "German";
-			 default:
-				 return "";
-		  }
-	  }
-
-	@Test
+	  @Test
 	  public void testSetLanguageToGerman() {
-		driver.get(baseUrl);
+		  driver.get(baseUrl);
 		  this.homepage.setLanguage("German");
-		  Assert.assertTrue("Set language doesnt match language on Page", this.languageMatch()=="German");
+		  Assertions.assertTrue(this.homepage.getHeader().contains("Günstige Versandkosten"), "Set language doesnt match language on Page, return sample: "+this.homepage.getHeader());
 	  }
 	  
 	  @Test
 	  public void testSetCurrencyToPolish() {
-		  this.homepage.setCurrency("Polski Złoty");
+		  driver.get(baseUrl);
+		  this.homepage.setCurrency("Złoty Polski");
 		  String price = driver.findElement(By.className("price")).getText();
-		  Assert.assertTrue(price.contains("zł"));
+		  Assertions.assertTrue(price.contains("zł"));
 	  }
 	  
 	  @Test
 	  public void testSetCurrencyToGerman() {
+		  driver.get(baseUrl);
 		  this.homepage.setCurrency("Euro");
 		  String price = driver.findElement(By.className("price")).getText();
-		  Assert.assertTrue(price.contains("€"));
+		  Assertions.assertTrue(price.contains("€"));
 	  }
 	}
